@@ -1,0 +1,9 @@
+[LDAP]
+ServerHost = "ad.example.com"
+ServerPort = 636
+IsTLS = true
+CACertFilePath = ""
+BindDN = "CN=ldap-bind,CN=Users,DC=example,DC=com"
+BindPassword = ""
+BaseDN = "CN=Users,DC=example,DC=com"
+SearchFilter = "(&(|(memberOf=cn=Domain Users,cn=Users,dc=example,dc=com)(primaryGroupID=513))(sAMAccountName=%s))"

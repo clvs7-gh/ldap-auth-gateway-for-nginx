@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(45deg, #333, #567558);
+    margin: 0;
+    min-height: 100vh;
+}
+
+#background__container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#background__container__text {
+    display: inline-block;
+    font-family: serif;
+    font-size: 80vh;
+    color: #000;
+    margin: 27.5vh 0 0 calc(100% - 70vh);
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#container {
+    position: relative;
+    padding-top: 2.5vh;
+    margin: 0 auto;
+    width: 90vw;
+}
+
+#container__login__box {
+    border-radius: 1em;
+    margin: 10vh auto 0 auto;
+    padding: 1.2em;
+    width: 50%;
+    min-width: 320px;
+
+    background: rgba(255, 255, 255, 0.75);
+}
+
+#container__login__box__title {
+    font-size: 2em;
+    margin-top: 0;
+    border-bottom: #333 2px solid;
+}
+
+h3.container__login__box__description {
+    margin-top: 8.5%;
+    font-size: 1.35em;
+    text-align: center;
+}
+
+h3.container__login__box__message {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff0000;
+    text-align: center;
+    margin: 0;
+}
+
+input.container__login__box__input--username,
+input.container__login__box__input--password,
+input.container__login__box__input--submit
+{
+    display: block;
+    font-size: 1.2em;
+    padding: 0.25em;
+    margin: 0.5em auto;
+    width: 50%;
+    min-width: 260px;
+}
+
+input.container__login__box__input--submit {
+    margin-top: 1.5em;
+    padding: 0.75em;
+}
+
+div#container__login__box__forget {
+    font-size: 0.8em;
+    text-align: right;
+}
