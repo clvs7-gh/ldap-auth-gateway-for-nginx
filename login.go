@@ -45,6 +45,8 @@ func ShowLoginForm(message string, parentRedirectTo string) httprouter.Handle {
 }
 
 func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	config := LoadConfig()
+
 	redirectTo := r.FormValue("redirect_to")
 	if redirectTo == "" {
 		redirectTo = r.Header.Get("X-GATEWAY-REDIRECT-TO")
@@ -53,7 +55,11 @@ func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	l, err := ConnectLDAP()
 	if err != nil {
 		log.Printf("LDAP Error : %+v\n", err)
-		ShowLoginForm(fmt.Sprintf("LDAP Error : %s", err.Error()), redirectTo)(w, r, p)
+		if config.LDAP.IsShowErrorDetails {
+			ShowLoginForm(fmt.Sprintf("LDAP Error : %s", err.Error()), redirectTo)(w, r, p)
+		} else {
+			ShowLoginForm("Failed to connect to LDAP server.", redirectTo)(w, r, p)
+		}
 		return
 	}
 	defer l.Close()
@@ -69,7 +75,11 @@ func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	err = AuthLDAP(l, username, password)
 	if err != nil {
 		log.Printf("Auth Error (%s) : %+v\n", username, err)
-		ShowLoginForm(fmt.Sprintf("Failed to login : %s", err.Error()), redirectTo)(w, r, p)
+		if config.LDAP.IsShowErrorDetails {
+			ShowLoginForm(fmt.Sprintf("Failed to login : %s", err.Error()), redirectTo)(w, r, p)
+		} else {
+			ShowLoginForm("Failed to login.", redirectTo)(w, r, p)
+		}
 		return
 	}
 
@@ -78,7 +88,7 @@ func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// Regenerate SessionID to prevent session fixitation attack
 	session := GetSessionManager().Load(r)
 	session.PutBool(w, "isLoggedIn", true)
-    session.PutString(w, "username", username);
+	session.PutString(w, "username", username)
 	session.RenewToken(w)
 
 	http.Redirect(w, r, redirectTo, http.StatusSeeOther)
@@ -87,11 +97,11 @@ func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func CookieLoginTest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	session := GetSessionManager().Load(r)
 	isLoggedIn, _ := session.GetBool("isLoggedIn")
-    username, _ := session.GetString("username")
+	username, _ := session.GetString("username")
 	if !isLoggedIn {
 		w.WriteHeader(http.StatusForbidden)
 	} else {
-        w.Header().Set("X-AUTH-USERNAME", username)
+		w.Header().Set("X-AUTH-USERNAME", username)
 		w.WriteHeader(http.StatusOK)
 	}
 }

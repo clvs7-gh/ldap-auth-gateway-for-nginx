@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-    "path/filepath"
+	"path/filepath"
 
 	"github.com/BurntSushi/toml"
 )
@@ -16,14 +16,15 @@ type Config struct {
 	LDAP LDAPConfig
 }
 type LDAPConfig struct {
-	ServerHost     string
-	ServerPort     uint16
-	IsTLS          bool
-	CACertFilePath string
-	BindDN         string
-	BindPassword   string
-	BaseDN         string
-	SearchFilter   string
+	ServerHost         string
+	ServerPort         uint16
+	IsTLS              bool
+	CACertFilePath     string
+	BindDN             string
+	BindPassword       string
+	BaseDN             string
+	SearchFilter       string
+	IsShowErrorDetails bool
 }
 
 func LoadConfig() *Config {
@@ -32,7 +33,7 @@ func LoadConfig() *Config {
 		if err != nil {
 			log.Fatal(err)
 		}
-        exePath := filepath.Dir(exe)
+		exePath := filepath.Dir(exe)
 
 		if _, err := toml.DecodeFile(exePath+FileConfig, &_config); err != nil {
 			log.Fatal(err)
